@@ -5,28 +5,49 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float speed;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() { }
+    private Animator animator;
 
-    // Update is called once per frame
-    void Update() { }
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    void Start()
+    {
+        Idle();
+    }
 
     public void Running()
     {
-        GetComponent<Animator>().SetBool("isMoving", true);
+        if (animator != null)
+            animator.SetBool("isMoving", true);
     }
 
     public void Idle()
     {
-        GetComponent<Animator>().SetBool("isMoving", false);
+        if (animator != null)
+            animator.SetBool("isMoving", false);
     }
 
-    public void MoveToRunner(Transform transformRunner)
+    public void MoveToRunner(Transform transformRunner, bool canDestroyTarget = true)
     {
-        transform.position = Vector3.Lerp(
+        if (transformRunner == null)
+            return;
+
+        Running();
+        transform.position = Vector3.MoveTowards(
             transform.position,
             transformRunner.position,
             speed * Time.deltaTime
         );
+
+        if (Vector3.Distance(transform.position, transformRunner.position) < 0.2f)
+        {
+            if (canDestroyTarget && transformRunner != null)
+            {
+                Destroy(transformRunner.gameObject);
+            }
+            Destroy(gameObject);
+        }
     }
 }

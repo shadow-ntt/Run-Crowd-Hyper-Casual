@@ -23,14 +23,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnDisable()
-    {
-        GameManager.OnChangeGameState -= OnChangeGameStateCallBack;
-    }
-
     void OnEnable()
     {
         GameManager.OnChangeGameState += OnChangeGameStateCallBack;
+        EnemyGroup.StartCombat += OnStartCombat;
+        EnemyGroup.EndCombat += OnEndCombat;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnChangeGameState -= OnChangeGameStateCallBack;
+        EnemyGroup.StartCombat -= OnStartCombat;
+        EnemyGroup.EndCombat -= OnEndCombat;
+    }
+
+    private void OnStartCombat()
+    {
+        IsMoving = false;
+    }
+
+    private void OnEndCombat()
+    {
+        IsMoving = true;
     }
 
     private void OnChangeGameStateCallBack(GameManager.GameState gameState)

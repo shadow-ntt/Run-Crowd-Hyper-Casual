@@ -3,40 +3,52 @@ using UnityEngine;
 public class PlayerCollision : MonoBehaviour
 {
     private Player player;
+    private Collider[] hitColliders = new Collider[10];
+
     void Awake()
     {
         player = GetComponent<Player>();
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
-        HandleCollision();
+        HandleDoorCollision();
     }
 
-    //
-    void HandleCollision()
+    private void HandleDoorCollision()
     {
-         Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, 0.0f);
-         foreach (var hitCollider in hitColliders)
+        int count = Physics.OverlapSphereNonAlloc(transform.position, 1f, hitColliders);
+        for (int i = 0; i < count; i++)
         {
-            if(hitCollider.TryGetComponent<Door>(out Door door))
+            Collider col = hitColliders[i];
+            if (col == null)
+                continue;
+
+            if (col.TryGetComponent(out Doors doors))
             {
-                int count = door.Active(player.RunnerCount());
-                Destroy(door.transform.parent.gameObject);
-                player.SetSerialRuner(count);
-                return;
-            }else if (hitCollider.CompareTag("EndLine"))
-            {
-                GameManager.Instance.ChangeGameState(GameManager.GameState.LevelComplete);
+                Door chosenDoor = doors.GetDoorByX(transform.position.x);
+                if (chosenDoor != null)
+                {
+                    player.ApplyAmount(chosenDoor.DoorType, chosenDoor.Value);
+                }
+                doors.Disable();
+                break;
             }
         }
     }
-    
-    //
+
+    void OnTriggerEnter(Collider other)
+    {
+        // Collision EndLine-Finish
+        if (other.CompareTag("EndLine"))
+        {
+            GameManager.Instance.ChangeGameState(GameManager.GameState.LevelComplete);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, 1f);
+    }
 }
