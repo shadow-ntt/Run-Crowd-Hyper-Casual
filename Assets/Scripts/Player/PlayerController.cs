@@ -4,16 +4,25 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    public float runSpeed;
+    private float runSpeed;
 
     [SerializeField]
-    public float slidSpeed;
+    private float slidSpeed;
+
+    [SerializeField]
+    private float maxX = 5;
     private Vector3 clickPositionPlayer;
     private Vector3 clickPositionMouse;
 
     public bool IsMoving = true;
+    private Player player;
 
     //
+    void Awake()
+    {
+        player = GetComponent<Player>();
+    }
+
     void Update()
     {
         if (IsMoving)
@@ -56,6 +65,7 @@ public class PlayerController : MonoBehaviour
     }
 
     //
+
     void HandlePlayerControll()
     {
         if (Input.GetMouseButtonDown(0))
@@ -69,6 +79,11 @@ public class PlayerController : MonoBehaviour
             float xDifferent = (Input.mousePosition.x - clickPositionMouse.x) / Screen.width;
             Vector3 position = transform.position;
             position.x = xDifferent * slidSpeed + clickPositionPlayer.x;
+            float radiusContain = maxX - player.GetRadiusGroup();
+            if (position.x > 0 && position.x > radiusContain)
+                position.x = radiusContain;
+            if (position.x < 0 && position.x < -radiusContain)
+                position.x = -radiusContain;
             transform.position = position;
         }
     }

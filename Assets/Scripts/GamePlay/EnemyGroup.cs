@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EnemyGroup : MonoBehaviour
@@ -15,11 +16,16 @@ public class EnemyGroup : MonoBehaviour
     private float radius;
 
     [SerializeField]
+    private float radiusScan = 6.0f;
+
+    [SerializeField]
     private float angle = 137.5f;
 
     [Header("GameObject")]
     [SerializeField]
-    private GameObject playerGroup;
+    private TMP_Text countText;
+
+    //
     private Collider[] colliders = new Collider[10];
     private List<Enemy> listEnemies = new List<Enemy>();
 
@@ -29,10 +35,31 @@ public class EnemyGroup : MonoBehaviour
     private bool isCombat = false;
     private bool combatEnded = false;
 
+    private Transform playerGroup;
+
+    //
+    void OnEnable()
+    {
+        StartCombat += onStartCombat;
+    }
+
+    void OnDisable()
+    {
+        StartCombat -= onStartCombat;
+    }
+
+    void onStartCombat()
+    {
+        countText.transform.parent.gameObject.SetActive(false);
+    }
+
+    //
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerGroup = GameObject.FindWithTag("RunnerGroup").transform;
         Generate();
+        countText.text = amount.ToString();
     }
 
     // Update is called once per frame
@@ -90,7 +117,7 @@ public class EnemyGroup : MonoBehaviour
         if (listEnemies.Count == 0 || playerGroup == null)
             return;
 
-        int runnerCount = playerGroup.transform.childCount;
+        int runnerCount = playerGroup.childCount;
 
         for (int i = 0; i < listEnemies.Count; i++)
         {
@@ -99,7 +126,7 @@ public class EnemyGroup : MonoBehaviour
 
             if (runnerCount > 0)
             {
-                Transform targetRunner = playerGroup.transform.GetChild(i % runnerCount);
+                Transform targetRunner = playerGroup.GetChild(i % runnerCount);
                 if (targetRunner != null)
                 {
                     listEnemies[i].MoveToRunner(targetRunner, true);
@@ -117,7 +144,7 @@ public class EnemyGroup : MonoBehaviour
     {
         int num = Physics.OverlapSphereNonAlloc(
             transform.position,
-            5.0f,
+            radiusScan,
             colliders,
             LayerMask.GetMask("Player")
         );
@@ -127,5 +154,10 @@ public class EnemyGroup : MonoBehaviour
             StartCombat?.Invoke();
             SetTargetRunner();
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, radiusScan);
     }
 }

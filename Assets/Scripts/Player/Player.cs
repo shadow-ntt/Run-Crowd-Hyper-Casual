@@ -42,6 +42,16 @@ public class Player : MonoBehaviour
     }
 
     //
+    public float GetRadiusGroup()
+    {
+        int count = RunnerGroup.childCount;
+
+        if (count == 0)
+            return 0f;
+
+        return radius * Mathf.Sqrt(count - 1);
+    }
+
     private Vector3 GetRunnerLocalPositions(int index)
     {
         float r = radius * Mathf.Sqrt(index);
@@ -100,7 +110,8 @@ public class Player : MonoBehaviour
                 SetSerialRuner(RunnerCount() * amount);
                 break;
             case Door.TypeDoor.Division:
-                if (amount <= 0) return;
+                if (amount <= 0)
+                    return;
                 SetSerialRuner(Mathf.Max(1, RunnerCount() / amount));
                 break;
         }
