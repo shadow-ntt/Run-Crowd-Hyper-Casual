@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 clickPositionPlayer;
     private Vector3 clickPositionMouse;
 
-    public bool IsMoving = true;
+    private bool IsMoving = false;
     private Player player;
 
     //
@@ -53,7 +53,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEndCombat()
     {
-        IsMoving = true;
+        if (!GameManager.Instance.IsGameOverState())
+            IsMoving = true;
     }
 
     private void OnChangeGameStateCallBack(GameManager.GameState gameState)

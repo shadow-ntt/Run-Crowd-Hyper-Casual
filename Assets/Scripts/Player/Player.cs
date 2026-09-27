@@ -1,17 +1,15 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Singleton<Player>
 {
     [SerializeField]
     private float radius;
 
     [SerializeField]
     private Transform RunnerGroup;
-
-    [SerializeField]
-    private GameObject RunnerPrefab;
 
     [SerializeField]
     private Road road;
@@ -25,20 +23,99 @@ public class Player : MonoBehaviour
     [SerializeField]
     private TextMeshPro textCount;
 
+    private Transform RunnerPrefab;
+    private HashSet<Obstacle> activeObstacles = new HashSet<Obstacle>();
     public bool isLerp = false;
 
+    void OnEnable()
+    {
+        StoreManager.onSelectedSkin += HandleSelectedSkin;
+        GameManager.OnChangeGameState += OnChangeGameStateCallBack;
+        DataManager.onUpLevelRunner += HandleUpgradeRunner;
+    }
+
+    void OnDisable()
+    {
+        StoreManager.onSelectedSkin -= HandleSelectedSkin;
+        GameManager.OnChangeGameState -= OnChangeGameStateCallBack;
+        DataManager.onUpLevelRunner -= HandleUpgradeRunner;
+    }
+
+    void HandleSelectedSkin(SkinItemSO skinItemSO)
+    {
+        //Clear old skin
+        for (int i = 0; i < RunnerGroup.childCount; i++)
+            Destroy(RunnerGroup.GetChild(i).gameObject);
+        //
+        int currentCount = DataManager.Instance.AmoutStartRunner;
+        RunnerPrefab = skinItemSO.Prefab;
+        SpawnRunner(currentCount);
+    }
+
+    private void HandleUpgradeRunner(int totalRunners)
+    {
+        int diff = totalRunners - RunnerGroup.childCount;
+        if (diff > 0)
+        {
+            SpawnRunner(diff);
+        }
+    }
+
+    private void OnChangeGameStateCallBack(GameManager.GameState gameState)
+    {
+        if (gameState == GameManager.GameState.LevelComplete)
+            DataManager.Instance.AddCoins(CaculateReward());
+    }
+
+    void SpawnRunner(int number)
+    {
+        for (int i = 0; i < number; i++)
+        {
+            Instantiate(RunnerPrefab, RunnerGroup);
+        }
+        if (!GameManager.Instance.IsGameState())
+        {
+            GetComponent<PlayerAnimator>().PlayerIdle();
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() { }
+    void Start()
+    {
+        InitSkinAndRunners();
+    }
+
+    public void InitSkinAndRunners()
+    {
+        SkinItemSO selectedSkin = StoreManager.Instance.GetSkinItemSelected();
+        RunnerPrefab = selectedSkin.Prefab;
+
+        int startAmount = DataManager.Instance.AmoutStartRunner;
+
+        for (int i = RunnerGroup.childCount - 1; i >= 0; i--)
+        {
+            Destroy(RunnerGroup.GetChild(i).gameObject);
+        }
+
+        SpawnRunner(startAmount);
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (isLerp)
-            PlaceRunnersMoveEase();
-        else
-            PlaceRunners();
-        GameUI.Instance.setProgressLevel(ProgressEndLine());
-        textCount.text = RunnerGroup.childCount.ToString();
+        if (activeObstacles.Count < 1)
+        {
+            if (isLerp)
+                PlaceRunnersMoveEase();
+            else
+                PlaceRunners();
+            GameUI.Instance.setProgressLevel(ProgressEndLine());
+            textCount.text = RunnerGroup.childCount.ToString();
+        }
+        if (RunnerCount() <= 0 && GameManager.Instance.IsGameState())
+        {
+            GameManager.Instance.ChangeGameState(GameManager.GameState.GameOver);
+        }
     }
 
     //
@@ -75,16 +152,17 @@ public class Player : MonoBehaviour
         for (int i = 0; i < RunnerCount(); i++)
         {
             RunnerGroup.GetChild(i).localPosition = Vector3.Lerp(
-                transform.position,
+                RunnerGroup.GetChild(i).localPosition,
                 GetRunnerLocalPositions(i),
                 speed * Time.deltaTime
             );
         }
+        //kiểm tra về đúng vị trí chưa
         for (int i = 0; i < RunnerCount(); i++)
         {
             if (
-                Vector3.Distance(RunnerGroup.GetChild(i).position, GetRunnerLocalPositions(i))
-                > 0.1f
+                Vector3.Distance(RunnerGroup.GetChild(i).localPosition, GetRunnerLocalPositions(i))
+                > 0.2f
             )
                 return;
         }
@@ -123,10 +201,7 @@ public class Player : MonoBehaviour
         //add runner
         if (n > RunnerCount())
         {
-            for (int i = 0; i < n - runnerCount; i++)
-            {
-                Instantiate(RunnerPrefab, RunnerGroup);
-            }
+            SpawnRunner(n - runnerCount);
         }
         //remove runner
         if (n < runnerCount)
@@ -141,5 +216,22 @@ public class Player : MonoBehaviour
     public float ProgressEndLine()
     {
         return transform.position.z / road.EndLineZ;
+    }
+
+    public void RegisterObstacle(Obstacle obstacle)
+    {
+        activeObstacles.Add(obstacle);
+    }
+
+    public void UnRegisterObstacle(Obstacle obstacle)
+    {
+        activeObstacles.Remove(obstacle);
+        isLerp = true;
+    }
+
+    public int CaculateReward()
+    {
+        return (int)
+            Math.Floor(Math.Sqrt(RunnerCount()) * (0.1f * DataManager.Instance.LevelIncome + 1f));
     }
 }

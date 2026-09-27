@@ -1,14 +1,24 @@
+using TMPro;
 using UnityEngine;
 
 public class GameCompletedUI : Menu
 {
-    void Start() { }
+    [SerializeField]
+    private TMP_Text coinReward;
+
+    protected override void OnOpen()
+    {
+        base.OnOpen();
+        UpdateRewardUI();
+    }
+
+    public void UpdateRewardUI()
+    {
+        coinReward.text = $"+{Player.Instance.CaculateReward()}";
+    }
 
     public void HandlePressNext()
     {
-        int currentLevel = SaveLoadManager.LoadInt("level", 1);
-        SaveLoadManager.SaveInt("level", ++currentLevel);
         GameManager.Instance.ReloadScene();
-        GameManager.Instance.ChangeGameState(GameManager.GameState.Game);
     }
 }

@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
     private Player player;
     private Collider[] hitColliders = new Collider[10];
+    public static Action onDoorHit;
 
     void Awake()
     {
@@ -30,6 +32,7 @@ public class PlayerCollision : MonoBehaviour
                 if (chosenDoor != null)
                 {
                     player.ApplyAmount(chosenDoor.DoorType, chosenDoor.Value);
+                    onDoorHit?.Invoke();
                 }
                 doors.Disable();
                 break;

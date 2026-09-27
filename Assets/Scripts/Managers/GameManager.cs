@@ -1,42 +1,72 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private LevelSO[] levels;
-    private GameState currentState;
-    public int numLevel=1;
+    [SerializeField]
+    private LevelSO[] levels;
 
-    public enum GameState { Menu, Game, LevelComplete, GameOver }
-    public static GameManager Instance;
-    public static Action<GameState> OnChangeGameState; 
-    void Awake()
+    [SerializeField]
+    private int gamePlayed = 0;
+    private GameState currentState;
+
+    public enum GameState
     {
-        if (Instance == null)
-        {
-            Instance =this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        Menu,
+        Game,
+        LevelComplete,
+        GameOver,
+    }
+
+    public static Action<GameState> OnChangeGameState;
+
+    public static GameManager Instance { get; private set; }
+
+    // Ads
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
     }
+
     void Start()
     {
-        currentState=GameState.Game;
+        currentState = GameState.Game;
+        ChangeGameState(GameState.Menu);
+        AdsManager.Instance.bannerAds.ShowBannerAd();
     }
+
     public void ChangeGameState(GameState gameState)
     {
+        Debug.Log("State Game: " + gameState);
+
         if (currentState != gameState)
         {
-            this.currentState=gameState;
+            this.currentState = gameState;
             OnChangeGameState?.Invoke(gameState);
-            Debug.Log("State change: "+gameState);
         }
     }
+
     public void ReloadScene()
     {
+        ++gamePlayed;
+        if (gamePlayed % 3 == 0)
+        {
+            AdsManager.Instance.interstitialAds.ShowAd();
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public bool IsGameState() => currentState == GameState.Game;
+
+    public bool IsGameOverState() => currentState == GameState.GameOver;
 }

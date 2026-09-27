@@ -2,35 +2,53 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public  class GameUI :MonoBehaviour
+public class GameUI : Singleton<GameUI>
 {
-    [SerializeField] private Slider progressLevel;
-    [SerializeField] private TMP_Text textLevel;
+    [SerializeField]
+    private Slider progressLevel;
 
-    public static GameUI Instance;
-        void Awake()
+    [SerializeField]
+    private TMP_Text textLevel;
+
+    [SerializeField]
+    private string levelPrefix = "Level: ";
+
+    void OnEnable()
     {
-        if (Instance == null)
-        {
-            Instance =this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        GameManager.OnChangeGameState += ChangeGameStateCallBack;
+        Road.onUpLevel += HandleUpLevel;
     }
+
+    void OnDisable()
+    {
+        GameManager.OnChangeGameState -= ChangeGameStateCallBack;
+        Road.onUpLevel -= HandleUpLevel;
+    }
+
+    private void HandleUpLevel(int level)
+    {
+        textLevel.text = $"{levelPrefix}{level}";
+    }
+
+    private void ChangeGameStateCallBack(GameManager.GameState gameState)
+    {
+        if (gameState == GameManager.GameState.Menu) { }
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     void Start()
     {
-        textLevel.text=SaveLoadManager.LoadInt("level", 1).ToString();
+        HandleUpLevel(Road.Instance.CurrentLevel);
     }
-    void Update()
-    {
-        
-    }
+
+    void Update() { }
+
     public void setProgressLevel(float value)
     {
-        progressLevel.value=value;
+        progressLevel.value = value;
     }
-    
 }

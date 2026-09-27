@@ -1,10 +1,36 @@
+using System;
 using UnityEngine;
 
-public class Road : MonoBehaviour
+public class Road : Singleton<Road>
 {
-    [SerializeField] private LevelSO[] levels;
-    [SerializeField] private Chunk EndLine;
-    public  float EndLineZ {get;private set;}
+    [SerializeField]
+    private LevelSO[] levels;
+
+    [SerializeField]
+    private Chunk EndLine;
+
+    private string LEVELGAME = "levelGame";
+    private int levelGame = 1;
+    public float EndLineZ { get; private set; }
+    public static Action<int> onUpLevel;
+    public int CurrentLevel => levelGame;
+
+    void OnEnable() => GameManager.OnChangeGameState += ChangeGameStateCallBack;
+    void OnDisable() => GameManager.OnChangeGameState -= ChangeGameStateCallBack;
+
+    private void ChangeGameStateCallBack(GameManager.GameState gameState)
+    {
+        if (gameState == GameManager.GameState.LevelComplete)
+            LevelUp();
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        int saved = Mathf.Max(1, SaveLoadManager.LoadInt(LEVELGAME, 1));
+        levelGame = (saved - 1) % GetMaxLevel() + 1;
+    }
+
     void Start()
     {
         Generate();
@@ -12,37 +38,16 @@ public class Road : MonoBehaviour
 
     private void Generate()
     {
-        if (GameManager.Instance == null)
-        {
-            Debug.LogError("GameManager.Instance chưa được khởi tạo!");
-            return;
-        }
-
-        int numLevel = SaveLoadManager.LoadInt("level",1);
-        if (levels == null || levels.Length == 0)
-        {
-            Debug.LogError("Chưa gán danh sách Levels trong Road!");
-            return;
-        }
-
-        int levelIndex = (numLevel - 1) % levels.Length;
-        if (levelIndex < 0 || levelIndex >= levels.Length || levels[levelIndex] == null)
-        {
-            Debug.LogError($"Level {numLevel} không hợp lệ!");
-            return;
-        }
-
+        int levelIndex = levelGame - 1;
         float currentZ = 0f;
+
         foreach (var chunk in levels[levelIndex].chunks)
         {
-            if (chunk == null) continue;
-
             float length = chunk.GetLength();
             float centerZ = currentZ + (length / 2f);
 
-            Chunk newChunk = Instantiate(chunk, this.transform);
+            Chunk newChunk = Instantiate(chunk, transform);
             newChunk.transform.localPosition = new Vector3(0f, 0f, centerZ);
-
             currentZ += length;
         }
 
@@ -51,11 +56,18 @@ public class Road : MonoBehaviour
             float endLength = EndLine.GetLength();
             float centerZ = currentZ + (endLength / 2f);
 
-            Chunk endLine = Instantiate(EndLine, this.transform);
+            Chunk endLine = Instantiate(EndLine, transform);
             endLine.transform.localPosition = new Vector3(0f, 0f, centerZ);
-
-            currentZ += endLength;
             EndLineZ = centerZ;
         }
+    }
+
+    public int GetMaxLevel() => levels.Length;
+
+    private void LevelUp()
+    {
+        levelGame = (levelGame % GetMaxLevel()) + 1;
+        SaveLoadManager.SaveInt(LEVELGAME, levelGame);
+        onUpLevel?.Invoke(levelGame);
     }
 }
