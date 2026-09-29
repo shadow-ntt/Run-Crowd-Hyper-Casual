@@ -15,6 +15,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     private AudioSource levelCompleteSound;
 
+    [SerializeField]
+    private AudioSource buttonSound;
+
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -32,6 +35,7 @@ public class AudioManager : MonoBehaviour
         GameManager.OnChangeGameState -= GameStateChangedCallBack;
     }
 
+    // Lắng nghe thay đổi trạng thái game để phát âm thanh kết thúc tương ứng
     private void GameStateChangedCallBack(GameManager.GameState state)
     {
         if (state == GameManager.GameState.GameOver)
@@ -40,24 +44,33 @@ public class AudioManager : MonoBehaviour
             PlayLevelCompleteSound();
     }
 
+    // Phát âm thanh khi người chơi đi qua cửa
     public void PlayDoorHitSound()
     {
         doorHitSound.Play();
     }
 
+    // Phát âm thanh khi một runner bị tiêu diệt
     public void PlayRunnerDieSound()
     {
         runnerDieSound.Play();
     }
 
+    // Phát âm thanh khi thua trận
     public void PlayGameOverSound()
     {
         gameOverSound.Play();
     }
 
+    // Phát âm thanh khi hoàn thành màn chơi
     public void PlayLevelCompleteSound()
     {
-        Debug.Log("?");
         levelCompleteSound.Play();
+    }
+
+    // Phát âm thanh khi hoàn thành màn chơi
+    public void PlayButtonSound()
+    {
+        buttonSound.Play();
     }
 }

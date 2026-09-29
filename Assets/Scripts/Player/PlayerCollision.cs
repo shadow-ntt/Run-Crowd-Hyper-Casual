@@ -17,6 +17,7 @@ public class PlayerCollision : MonoBehaviour
         HandleDoorCollision();
     }
 
+    // Quét phát hiện và xử lý va chạm với cửa để áp dụng hiệu ứng và kích hoạt âm thanh
     private void HandleDoorCollision()
     {
         int count = Physics.OverlapSphereNonAlloc(transform.position, 1f, hitColliders);

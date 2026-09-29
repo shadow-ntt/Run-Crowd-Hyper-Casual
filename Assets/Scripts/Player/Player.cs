@@ -41,6 +41,7 @@ public class Player : Singleton<Player>
         DataManager.onUpLevelRunner -= HandleUpgradeRunner;
     }
 
+    // Cập nhật lại toàn bộ runner theo prefab của skin vừa được chọn
     void HandleSelectedSkin(SkinItemSO skinItemSO)
     {
         //Clear old skin
@@ -52,6 +53,7 @@ public class Player : Singleton<Player>
         SpawnRunner(currentCount);
     }
 
+    // Xử lý tạo thêm runner khi nâng cấp số lượng runner ban đầu
     private void HandleUpgradeRunner(int totalRunners)
     {
         int diff = totalRunners - RunnerGroup.childCount;
@@ -61,12 +63,14 @@ public class Player : Singleton<Player>
         }
     }
 
+    // Xử lý cộng thưởng coin khi hoàn thành màn chơi
     private void OnChangeGameStateCallBack(GameManager.GameState gameState)
     {
         if (gameState == GameManager.GameState.LevelComplete)
             DataManager.Instance.AddCoins(CaculateReward());
     }
 
+    // Sinh ra số lượng runner chỉ định vào nhóm
     void SpawnRunner(int number)
     {
         for (int i = 0; i < number; i++)
@@ -85,6 +89,7 @@ public class Player : Singleton<Player>
         InitSkinAndRunners();
     }
 
+    // Khởi tạo skin và số lượng runner ban đầu khi vào game
     public void InitSkinAndRunners()
     {
         SkinItemSO selectedSkin = StoreManager.Instance.GetSkinItemSelected();
@@ -119,6 +124,7 @@ public class Player : Singleton<Player>
     }
 
     //
+    // Tính bán kính bao phủ của toàn bộ nhóm runner
     public float GetRadiusGroup()
     {
         int count = RunnerGroup.childCount;
@@ -129,6 +135,7 @@ public class Player : Singleton<Player>
         return radius * Mathf.Sqrt(count - 1);
     }
 
+    // Tính toán vị trí cục bộ của từng runner theo mô hình Fermat spiral
     private Vector3 GetRunnerLocalPositions(int index)
     {
         float r = radius * Mathf.Sqrt(index);
@@ -139,6 +146,7 @@ public class Player : Singleton<Player>
         return new Vector3(x, 0, z);
     }
 
+    // Đặt tức thì các runner vào đúng vị trí hình học của nhóm
     public void PlaceRunners()
     {
         for (int i = 0; i < RunnerCount(); i++)
@@ -147,6 +155,7 @@ public class Player : Singleton<Player>
         }
     }
 
+    // Di chuyển mượt mà các runner về vị trí hình học sau khi thay đổi số lượng
     public void PlaceRunnersMoveEase()
     {
         for (int i = 0; i < RunnerCount(); i++)
@@ -169,11 +178,13 @@ public class Player : Singleton<Player>
         isLerp = false;
     }
 
+    // Lấy tổng số lượng runner hiện có trong nhóm
     public int RunnerCount()
     {
         return RunnerGroup.childCount;
     }
 
+    // Áp dụng phép toán của cửa (+, -, *, /) lên số lượng runner
     public void ApplyAmount(Door.TypeDoor doorType, int amount)
     {
         switch (doorType)
@@ -195,6 +206,7 @@ public class Player : Singleton<Player>
         }
     }
 
+    // Điều chỉnh số lượng runner tăng hoặc giảm cho bằng đúng giá trị n
     public void SetSerialRuner(int n)
     {
         int runnerCount = RunnerCount();
@@ -213,22 +225,26 @@ public class Player : Singleton<Player>
         }
     }
 
+    // Tính toán tỉ lệ phần trăm quãng đường đã đi được tới đích
     public float ProgressEndLine()
     {
         return transform.position.z / road.EndLineZ;
     }
 
+    // Đăng ký chướng ngại vật đang tương tác với nhóm runner
     public void RegisterObstacle(Obstacle obstacle)
     {
         activeObstacles.Add(obstacle);
     }
 
+    // Hủy đăng ký chướng ngại vật và kích hoạt căn chỉnh lại đội hình
     public void UnRegisterObstacle(Obstacle obstacle)
     {
         activeObstacles.Remove(obstacle);
         isLerp = true;
     }
 
+    // Tính toán số coin thưởng nhận được khi hoàn thành màn chơi
     public int CaculateReward()
     {
         return (int)

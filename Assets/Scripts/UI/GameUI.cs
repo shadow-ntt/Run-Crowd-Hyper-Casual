@@ -25,11 +25,13 @@ public class GameUI : Singleton<GameUI>
         Road.onUpLevel -= HandleUpLevel;
     }
 
+    // Cập nhật text hiển thị số màn chơi khi người chơi lên cấp
     private void HandleUpLevel(int level)
     {
         textLevel.text = $"{levelPrefix}{level}";
     }
 
+    // Xử lý giao diện khi trạng thái game thay đổi
     private void ChangeGameStateCallBack(GameManager.GameState gameState)
     {
         if (gameState == GameManager.GameState.Menu) { }
@@ -47,6 +49,7 @@ public class GameUI : Singleton<GameUI>
 
     void Update() { }
 
+    // Cập nhật giá trị thanh trượt thể hiện tiến độ hoàn thành màn chơi
     public void setProgressLevel(float value)
     {
         progressLevel.value = value;

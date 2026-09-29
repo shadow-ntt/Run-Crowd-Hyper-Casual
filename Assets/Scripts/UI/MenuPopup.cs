@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Quản lý ngăn xếp Menu/Popup (Stack-based UI Navigation).
-/// Tái sử dụng cho mọi dự án. Kế thừa từ Singleton<MenuPopup>.
-/// Hỗ trợ LIFO: Push (mở menu mới, ẩn menu cũ), Pop (đóng menu hiện tại, khôi phục menu liền trước), CloseAll,
-/// và tự động bắt nút Back (Android) / phím ESC (PC).
-/// </summary>
+// Quản lý ngăn xếp Menu/Popup (Stack-based UI Navigation).
+// Tái sử dụng cho mọi dự án. Kế thừa từ Singleton<MenuPopup>.
+// Hỗ trợ LIFO: Push (mở menu mới, ẩn menu cũ), Pop (đóng menu hiện tại, khôi phục menu liền trước), CloseAll,
+// và tự động bắt nút Back (Android) / phím ESC (PC).
 public class MenuPopup : Singleton<MenuPopup>
 {
     [Header("Settings")]
@@ -48,6 +46,7 @@ public class MenuPopup : Singleton<MenuPopup>
         GameManager.OnChangeGameState += OnChangeGameStateCallBack;
     }
 
+    // Điều hướng và hiển thị Menu tương ứng theo trạng thái của game
     private void OnChangeGameStateCallBack(GameManager.GameState gameState)
     {
         switch (gameState)
@@ -93,12 +92,7 @@ public class MenuPopup : Singleton<MenuPopup>
         }
     }
 
-    /// <summary>
-    /// Đẩy Menu mới vào ngăn xếp:
-    /// - Không cho phép push trùng menu đang mở trên đỉnh stack.
-    /// - Ẩn Menu hiện tại (nếu có).
-    /// - Mở Menu mới và đưa vào đỉnh Stack.
-    /// </summary>
+    // Đẩy Menu mới vào ngăn xếp (ẩn menu hiện tại và mở menu mới)
     public void PushMenu(Menu newMenu)
     {
         if (newMenu == null)
@@ -136,9 +130,7 @@ public class MenuPopup : Singleton<MenuPopup>
         );
     }
 
-    /// <summary>
-    /// Đóng Menu trên đỉnh Stack và mở lại Menu liền trước nó.
-    /// </summary>
+    // Đóng Menu trên đỉnh Stack và mở lại Menu liền trước nó
     public void PopMenu()
     {
         if (menuStack.Count == 0)
@@ -172,9 +164,7 @@ public class MenuPopup : Singleton<MenuPopup>
         );
     }
 
-    /// <summary>
-    /// Đóng tất cả các Menu và dọn sạch Stack.
-    /// </summary>
+    // Đóng tất cả các Menu và dọn sạch Stack
     public void CloseAll()
     {
         while (menuStack.Count > 0)

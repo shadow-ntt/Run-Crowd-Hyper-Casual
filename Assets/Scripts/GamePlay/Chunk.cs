@@ -14,6 +14,7 @@ public class Chunk : MonoBehaviour
     {
         
     }
+    // Lấy chiều dài của chunk theo trục Z
     public float GetLength() => size.z;
 
 }

@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
         AdsManager.Instance.bannerAds.ShowBannerAd();
     }
 
+    // Thay đổi trạng thái hiện tại của game và kích hoạt sự kiện thông báo
     public void ChangeGameState(GameState gameState)
     {
         Debug.Log("State Game: " + gameState);
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Tải lại màn chơi hiện tại và hiển thị quảng cáo sau mỗi 3 lượt chơi
     public void ReloadScene()
     {
         ++gamePlayed;
@@ -66,7 +68,9 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    // Kiểm tra xem game có đang ở trạng thái Gameplay hay không
     public bool IsGameState() => currentState == GameState.Game;
 
+    // Kiểm tra xem game có đang ở trạng thái GameOver hay không
     public bool IsGameOverState() => currentState == GameState.GameOver;
 }

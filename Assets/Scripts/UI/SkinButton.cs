@@ -49,6 +49,7 @@ public class SkinButton : MonoBehaviour
         button.onClick.AddListener(Onclick);
     }
 
+    // Đưa nút skin về trạng thái khóa (hiển thị ổ khóa, ẩn icon và tắt bấm)
     public void OnLock()
     {
         lockIcon.SetActive(true);
@@ -56,6 +57,7 @@ public class SkinButton : MonoBehaviour
         button.interactable = false;
     }
 
+    // Đưa nút skin về trạng thái đã mở khóa (hiện icon skin, bật bấm)
     public void OnUnlock()
     {
         lockIcon.SetActive(false);
@@ -63,16 +65,19 @@ public class SkinButton : MonoBehaviour
         button.interactable = true;
     }
 
+    // Lắng nghe sự kiện chọn skin để cập nhật hiển thị viền chọn
     void HandleSelectedSkin(SkinItemSO skinItemSO)
     {
         UpdateSelectedVisual(skinItemSO);
     }
 
+    // Cập nhật viền highlight nếu skin này đang được chọn
     void UpdateSelectedVisual(SkinItemSO selectedSkin)
     {
         border.SetActive(SkinItemSO.Name.Equals(selectedSkin.Name));
     }
 
+    // Xử lý khi mở khóa thành công skin này từ hộp ngẫu nhiên
     void HandleOpen(SkinItemSO skinItemSO)
     {
         if (SkinItemSO.Name.Equals(skinItemSO.Name))
@@ -83,11 +88,13 @@ public class SkinButton : MonoBehaviour
         }
     }
 
+    // Gán sprite hình ảnh cho icon skin
     void SetSpriteIcon(Sprite sprite)
     {
         characterIcon.GetComponent<Image>().sprite = sprite;
     }
 
+    // Xử lý khi click vào nút để chọn trang bị skin (nếu đã mở khóa)
     void Onclick()
     {
         if (StoreManager.Instance.IsSkinItemUnlocked(SkinItemSO.Name))

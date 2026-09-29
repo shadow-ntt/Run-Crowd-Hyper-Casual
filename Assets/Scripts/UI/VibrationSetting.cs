@@ -32,46 +32,36 @@ public class VibrationSetting : Menu
         Init();
     }
 
+    // Khởi tạo trạng thái rung ban đầu từ dữ liệu đã lưu
     private void Init()
     {
         if (vibrationState)
             EnableVibration();
         else
-            EnableVibration();
+            DisableVibration();
     }
 
-    public void ChangeSoundState()
-    {
-        if (vibrationState)
-            EnableVibration();
-        else
-            EnableVibration();
-
-        vibrationState = !vibrationState;
-
-        // 0: vibration, 1: vibration
-        SaveLoadManager.SaveInt(VIBRATION_KEY, vibrationState ? 1 : 0);
-    }
-
+    // Bật hoặc tắt trạng thái rung và lưu vào PlayerPrefs
     public void ChangeVibrationState()
     {
-        if (vibrationState)
-            DisableVibration();
-        else
-            EnableVibration();
-
         vibrationState = !vibrationState;
+        if (vibrationState)
+            EnableVibration();
+        else
+            DisableVibration();
 
         // 0: sounds off, 1: sounds on
         SaveLoadManager.SaveInt(VIBRATION_KEY, vibrationState ? 1 : 0);
     }
 
+    // Bật rung và cập nhật hình ảnh nút bật
     private void EnableVibration()
     {
         vibrationManager.EnableVibration();
         vibrationButtonImage.sprite = optionOnSprite;
     }
 
+    // Tắt rung và cập nhật hình ảnh nút tắt
     private void DisableVibration()
     {
         vibrationManager.DisableVibration();

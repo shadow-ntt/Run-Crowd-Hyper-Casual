@@ -17,6 +17,7 @@ public class PlayerAnimator : MonoBehaviour
         GameManager.OnChangeGameState += OnChangeGameStateCallBack;
     }
 
+    // Chuyển đổi animation của runner (chạy hoặc đứng yên) theo trạng thái game
     private void OnChangeGameStateCallBack(GameManager.GameState gameState)
     {
         if (gameState == GameManager.GameState.Game)
@@ -25,6 +26,7 @@ public class PlayerAnimator : MonoBehaviour
             PlayerIdle();
     }
 
+    // Bật cờ di chuyển để kích hoạt animation chạy cho toàn bộ runner
     public void PlayerRun()
     {
         for (int i = 0; i < RunnerCount(); i++)
@@ -33,6 +35,7 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
+    // Tắt cờ di chuyển để chuyển toàn bộ runner về animation đứng yên
     public void PlayerIdle()
     {
         for (int i = 0; i < RunnerCount(); i++)
@@ -41,6 +44,7 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
+    // Lấy tổng số lượng runner hiện tại trong nhóm
     public int RunnerCount()
     {
         return RunnerGroup.childCount;

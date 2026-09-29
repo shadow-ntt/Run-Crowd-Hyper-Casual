@@ -18,6 +18,7 @@ public class Road : Singleton<Road>
     void OnEnable() => GameManager.OnChangeGameState += ChangeGameStateCallBack;
     void OnDisable() => GameManager.OnChangeGameState -= ChangeGameStateCallBack;
 
+    // Xử lý sự kiện thay đổi trạng thái game để tự động tăng level khi hoàn thành
     private void ChangeGameStateCallBack(GameManager.GameState gameState)
     {
         if (gameState == GameManager.GameState.LevelComplete)
@@ -36,6 +37,7 @@ public class Road : Singleton<Road>
         Generate();
     }
 
+    // Sinh ra các đoạn đường (chunks) và vạch đích cho level hiện tại
     private void Generate()
     {
         int levelIndex = levelGame - 1;
@@ -62,8 +64,10 @@ public class Road : Singleton<Road>
         }
     }
 
+    // Lấy tổng số lượng màn chơi trong game
     public int GetMaxLevel() => levels.Length;
 
+    // Tăng level tiếp theo, lưu dữ liệu và kích hoạt sự kiện lên level
     private void LevelUp()
     {
         levelGame = (levelGame % GetMaxLevel()) + 1;

@@ -20,6 +20,7 @@ public class Door : MonoBehaviour
         Generate(typeDoor, value);
     }
 
+    // Khởi tạo màu sắc và văn bản hiển thị dựa trên loại cửa và giá trị
     public void Generate(TypeDoor typeDoor, int value)
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();

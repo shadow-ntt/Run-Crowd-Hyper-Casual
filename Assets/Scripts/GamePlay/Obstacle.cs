@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Obstacle : MonoBehaviour
@@ -7,8 +7,16 @@ public class Obstacle : MonoBehaviour
     private Vector3 size;
     private Collider[] colliders = new Collider[10];
 
+    private bool isRegisted = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() { }
+    void Start()
+    {
+        if (size == Vector3.zero)
+        {
+            size = transform.lossyScale;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -16,6 +24,7 @@ public class Obstacle : MonoBehaviour
         HandleCollision();
     }
 
+    // Xử lý va chạm quét các runner va phải chướng ngại vật để tiêu diệt
     void HandleCollision()
     {
         int num = Physics.OverlapBoxNonAlloc(
@@ -25,25 +34,36 @@ public class Obstacle : MonoBehaviour
             transform.rotation,
             LayerMask.GetMask("Runner")
         );
-        if (num > 0)
+
+        bool isColliding = num > 0;
+
+        if (isColliding && !isRegisted)
         {
             Player.Instance.RegisterObstacle(this);
-            for (int i = 0; i < num; i++)
-            {
-                Destroy(colliders[i].gameObject);
-            }
-            StartCoroutine(A());
-            Player.Instance.UnRegisterObstacle(this);
+            isRegisted = true;
         }
+        else if (!isColliding && isRegisted)
+        {
+            StartCoroutine(UnregisterAfterDelay(0.2f));
+            isRegisted = false;
+        }
+
+        for (int i = 0; i < num; i++)
+        {
+            Destroy(colliders[i].gameObject);
+        }
+    }
+
+    // Coroutine tạo độ trễ xử lý sau va chạm (backward compatibility)
+    private IEnumerator UnregisterAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Player.Instance.UnRegisterObstacle(this);
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, size + new Vector3(0f, 1f, 0f));
-    }
-
-    private IEnumerator A()
-    {
-        yield return new WaitForSeconds(0.2f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position, size);
     }
 }

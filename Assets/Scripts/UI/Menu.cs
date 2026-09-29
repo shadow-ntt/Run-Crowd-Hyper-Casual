@@ -1,10 +1,7 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// Lớp cơ sở (Base Class) cho tất cả các Menu/Panel/Popup.
-/// Thiết kế Generic, độc lập, có thể tái sử dụng cho mọi dự án Unity.
-/// </summary>
+// Lớp cơ sở (Base Class) cho tất cả các Menu/Panel/Popup
 public abstract class Menu : MonoBehaviour
 {
     [Header("Base Menu Settings")]
@@ -37,9 +34,7 @@ public abstract class Menu : MonoBehaviour
         hideOnAwake = false;
     }
 
-    /// <summary>
-    /// Mở Menu và kích hoạt Hook OnOpen()
-    /// </summary>
+    // Mở Menu và kích hoạt Hook OnOpen()
     public virtual void Open()
     {
         if (gameObject.activeSelf)
@@ -55,9 +50,7 @@ public abstract class Menu : MonoBehaviour
         OnMenuOpened?.Invoke(this);
     }
 
-    /// <summary>
-    /// Đóng Menu và kích hoạt Hook OnClose()
-    /// </summary>
+    // Đóng Menu và kích hoạt Hook OnClose()
     public virtual void Close()
     {
         if (!gameObject.activeSelf)
@@ -68,9 +61,7 @@ public abstract class Menu : MonoBehaviour
         OnMenuClosed?.Invoke(this);
     }
 
-    /// <summary>
-    /// Đảo ngược trạng thái Mở/Đóng
-    /// </summary>
+    // Đảo ngược trạng thái Mở/Đóng của Menu
     public virtual void Toggle()
     {
         if (IsOpen)
@@ -79,15 +70,9 @@ public abstract class Menu : MonoBehaviour
             Open();
     }
 
-    /// <summary>
-    /// Hook vòng đời: Được gọi ngay khi Menu vừa mở.
-    /// Override ở lớp con để nạp dữ liệu, reset vị trí, chạy animation...
-    /// </summary>
+    // Hook vòng đời: Được gọi ngay khi Menu vừa mở (override ở lớp con nếu cần)
     protected virtual void OnOpen() { }
 
-    /// <summary>
-    /// Hook vòng đời: Được gọi ngay trước khi Menu bị ẩn.
-    /// Override ở lớp con để dọn dẹp, hủy đăng ký sự kiện...
-    /// </summary>
+    // Hook vòng đời: Được gọi ngay trước khi Menu bị ẩn (override ở lớp con nếu cần)
     protected virtual void OnClose() { }
 }

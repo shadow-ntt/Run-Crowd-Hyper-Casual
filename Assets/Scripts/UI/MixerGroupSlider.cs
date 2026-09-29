@@ -62,7 +62,7 @@ namespace Tiger.Audio
             ApplyDecibels(decibels);
         }
 
-        // Trả về trực tiếp decibels, không gọi ValueForDecibels ở đây
+        // Đọc giá trị decibels ban đầu trực tiếp từ tham số của Audio Mixer
         private float ReadInitialDecibelsFromMixer()
         {
             if (group.audioMixer.GetFloat(ParamName, out var decibels))
@@ -72,6 +72,7 @@ namespace Tiger.Audio
             return 0f; // Mặc định nếu chưa lấy được
         }
 
+        // Chuyển đổi giá trị Decibels sang giá trị tỉ lệ (0 đến 1) cho Slider theo thang phi tuyến
         private float ValueForDecibels(float decibels)
         {
             var normalized = math.saturate(math.remap(minDB, maxDB, 0, 1, decibels));
@@ -81,6 +82,7 @@ namespace Tiger.Audio
             return math.saturate(remapped);
         }
 
+        // Chuyển đổi giá trị Slider (0 đến 1) sang giá trị Decibels tương ứng
         private float DecibelsForValue(float value)
         {
             var remapped = math.remap(0, 1, 1, 10, value);
@@ -89,6 +91,7 @@ namespace Tiger.Audio
             return math.remap(0f, 1f, minDB, maxDB, nonlinear);
         }
 
+        // Xử lý sự kiện khi kéo Slider để cập nhật âm lượng vào Mixer và lưu vào PlayerPrefs
         private void OnValueChanged(float sliderValue)
         {
             var decibels = DecibelsForValue(sliderValue);
@@ -96,6 +99,7 @@ namespace Tiger.Audio
             PlayerPrefs.SetFloat(PrefsKey, decibels);
         }
 
+        // Áp dụng trực tiếp giá trị decibels vào tham số của Audio Mixer
         private void ApplyDecibels(float decibels)
         {
             group.audioMixer.SetFloat(ParamName, decibels);

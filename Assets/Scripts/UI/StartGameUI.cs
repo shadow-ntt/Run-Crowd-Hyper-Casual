@@ -39,6 +39,7 @@ public class StartGameUI : Menu
         DataManager.onChangeCoin -= HandleChangeCoin;
     }
 
+    // Hook khi menu mở: làm mới toàn bộ giao diện nâng cấp
     protected override void OnOpen()
     {
         base.OnOpen();
@@ -50,6 +51,7 @@ public class StartGameUI : Menu
         UpdateUI();
     }
 
+    // Cập nhật text level, giá nâng cấp và trạng thái các nút bấm trên UI
     public void UpdateUI()
     {
         // 1. Cập nhật Level
@@ -64,27 +66,32 @@ public class StartGameUI : Menu
         UpdateButtonsState();
     }
 
+    // Cập nhật trạng thái cho phép bấm của các nút nâng cấp theo số coin hiện có
     public void UpdateButtonsState()
     {
         buttonUnit.interactable = DataManager.Instance.IsEnoughBuyUpLevelRunner();
         buttonIncome.interactable = DataManager.Instance.IsEnoughBuyUpLevelIncome();
     }
 
+    // Lắng nghe sự kiện thay đổi coin để cập nhật trạng thái các nút bấm
     private void HandleChangeCoin(int coins)
     {
         UpdateButtonsState();
     }
 
+    // Lắng nghe sự kiện nâng cấp runner để làm mới giao diện
     private void HandleUpLevelUnit(int level)
     {
         UpdateUI();
     }
 
+    // Lắng nghe sự kiện nâng cấp income để làm mới giao diện
     private void HandleUpLevelIncome(int level)
     {
         UpdateUI();
     }
 
+    // Bắt đầu màn chơi bằng cách chuyển trạng thái game sang Gameplay
     public void StartGame()
     {
         GameManager.Instance.ChangeGameState(GameManager.GameState.Game);

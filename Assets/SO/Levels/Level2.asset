@@ -13,6 +13,18 @@ MonoBehaviour:
   m_Name: Level2
   m_EditorClassIdentifier: Assembly-CSharp::LevelSO
   chunks:
-  - {fileID: 3425397282696199445, guid: 7ad6eb486d8b9744197e9b5f91e44bca, type: 3}
-  - {fileID: 8634706583710784971, guid: 6db8c4f2ff2a90746b61cc2b2ad47653, type: 3}
-  - {fileID: 3102810673339762668, guid: 622d16df43244654f92170367536e395, type: 3}
+  - {fileID: -6541041042951570457, guid: 85f8826519c500c47be668822aeba544, type: 3}
+  - {fileID: 2673483456558870502, guid: d03a08c8336b494ebe942ce593df9ee0, type: 3}
+  - {fileID: 680563287626194355, guid: cd727ecc20eb40aa8139625ee8b0d39c, type: 3}
+  - {fileID: -8551691766832375374, guid: f6de3d24065626f41bfe875af4a3c41e, type: 3}
+  - {fileID: 680562846398672307, guid: db879f6b2918449cadee0081b8329a22, type: 3}
+  - {fileID: 2673483469849061350, guid: 2f1c299d20ad407a82c15e4f3bdb883a, type: 3}
+  - {fileID: -8551691766832375374, guid: f6de3d24065626f41bfe875af4a3c41e, type: 3}
+  - {fileID: 680563243805424051, guid: a1209a1a88d34efc944a7fc2632ec459, type: 3}
+  - {fileID: -8551691766832375374, guid: f6de3d24065626f41bfe875af4a3c41e, type: 3}
+  - {fileID: 680566232822082995, guid: ef8865af3dd6485d8ff240052db7c193, type: 3}
+  - {fileID: -8551691766832375374, guid: f6de3d24065626f41bfe875af4a3c41e, type: 3}
+  - {fileID: 680562818079241651, guid: ecc2edf2396d42728677a6d2e3eab2a1, type: 3}
+  - {fileID: 4456152276299571984, guid: 1dc851de370542d299c02e44f8bbe6ad, type: 3}
+  - {fileID: -8551691766832375374, guid: f6de3d24065626f41bfe875af4a3c41e, type: 3}
+  - {fileID: 680562827467040179, guid: 0207995de9854ff7ab7eb378f29603a9, type: 3}

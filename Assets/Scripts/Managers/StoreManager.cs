@@ -36,14 +36,17 @@ public class StoreManager : Singleton<StoreManager>
 
     void Update() { }
 
+    // Tìm và lấy SkinItemSO theo tên
     public SkinItemSO GetSkinItem(string name) =>
         skinItems.FirstOrDefault(skinItem => skinItem.Name.Equals(name));
 
+    // Kiểm tra xem skin tương ứng đã được mở khóa hay chưa
     public bool IsSkinItemUnlocked(string name)
     {
         return SaveLoadManager.LoadInt(name, 0) == 1;
     }
 
+    // Kiểm tra xem còn skin nào chưa được mở khóa hay không
     public bool HasLockedSkin()
     {
         foreach (var skinItem in skinItems)
@@ -54,11 +57,13 @@ public class StoreManager : Singleton<StoreManager>
         return false;
     }
 
+    // Kiểm tra điều kiện có thể mở khóa ngẫu nhiên skin (còn skin khóa và đủ coin)
     public bool CanUnlockRandom()
     {
         return HasLockedSkin() && DataManager.Instance.Coins >= priceOpenRandomSkin;
     }
 
+    // Mở khóa ngẫu nhiên một skin chưa sở hữu bằng coin
     public void UnlockRandom()
     {
         if (!CanUnlockRandom())
@@ -84,6 +89,7 @@ public class StoreManager : Singleton<StoreManager>
         onOpenSkin?.Invoke(unlockedSkin);
     }
 
+    // Lấy thông tin skin hiện đang được người chơi lựa chọn
     public SkinItemSO GetSkinItemSelected()
     {
         string nameItem = SaveLoadManager.LoadString(
@@ -93,6 +99,7 @@ public class StoreManager : Singleton<StoreManager>
         return skinItems.FirstOrDefault(item => item.Name.Equals(nameItem));
     }
 
+    // Chọn và trang bị skin, đồng thời lưu lại thiết lập
     public void SelectSkin(SkinItemSO skinItemSO)
     {
         SaveLoadManager.SaveString(NAME_SKINITEM_SELECTED, skinItemSO.Name);

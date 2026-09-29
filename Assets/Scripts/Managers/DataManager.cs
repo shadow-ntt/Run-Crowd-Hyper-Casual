@@ -40,6 +40,7 @@ public class DataManager : Singleton<DataManager>
 
     void Start() { }
 
+    // Cộng thêm coin và lưu lại dữ liệu
     public void AddCoins(int coin)
     {
         Coins += coin;
@@ -47,6 +48,7 @@ public class DataManager : Singleton<DataManager>
         onChangeCoin?.Invoke(Coins);
     }
 
+    // Trừ bớt coin nếu đủ số dư và lưu lại dữ liệu
     public void WithDrawCoins(int coin)
     {
         if (coin > Coins)
@@ -56,6 +58,7 @@ public class DataManager : Singleton<DataManager>
         onChangeCoin?.Invoke(Coins);
     }
 
+    // Nâng cấp level thu nhập (income) khi người chơi đủ coin
     public void HandleUpLevelIncome()
     {
         if (IsEnoughBuyUpLevelIncome())
@@ -66,6 +69,7 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
+    // Nâng cấp số lượng runner ban đầu khi người chơi đủ coin
     public void AddPlayRunner()
     {
         if (IsEnoughBuyUpLevelRunner())
@@ -77,19 +81,23 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
-    // reward ads
+    // Thưởng coin cho người chơi sau khi xem quảng cáo
     public void RewardCoin()
     {
         AddCoins(coinsReward);
     }
 
+    // Lấy lượng coin nhận được theo LevelIncome hiện tại
     public int GetCoinIncome() => LevelIncome * 100;
 
     public int PriceUpgradeAmountStartRunner => priceUpgradeAmountStartRunner;
 
+    // Tính cấp độ nâng cấp runner hiện tại
     public int LevelUnit() => AmoutStartRunner - amoutStartRunnerDefault;
 
+    // Kiểm tra xem có đủ coin để nâng cấp thu nhập hay không
     public bool IsEnoughBuyUpLevelIncome() => Coins >= GetCoinIncome();
 
+    // Kiểm tra xem có đủ coin để nâng cấp số lượng runner hay không
     public bool IsEnoughBuyUpLevelRunner() => Coins >= priceUpgradeAmountStartRunner;
 }

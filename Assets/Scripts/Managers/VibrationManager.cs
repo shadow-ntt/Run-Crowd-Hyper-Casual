@@ -24,11 +24,13 @@ public class VibrationManager : MonoBehaviour
         GameManager.OnChangeGameState -= GameStateChangedCallback;
     }
 
+    // Kích hoạt rung phản hồi loại nhẹ (LightImpact)
     private void Vibrate()
     {
         MOST_HapticFeedback.Generate(MOST_HapticFeedback.HapticTypes.LightImpact);
     }
 
+    // Lắng nghe thay đổi trạng thái game để kích hoạt rung khi thắng hoặc thua
     private void GameStateChangedCallback(GameManager.GameState state)
     {
         if (state == GameManager.GameState.LevelComplete)
@@ -37,11 +39,13 @@ public class VibrationManager : MonoBehaviour
             Vibrate();
     }
 
+    // Bật tính năng rung cho game
     public void EnableVibration()
     {
         MOST_HapticFeedback.HapticsEnabled = true;
     }
 
+    // Tắt tính năng rung cho game
     public void DisableVibration()
     {
         MOST_HapticFeedback.HapticsEnabled = false;

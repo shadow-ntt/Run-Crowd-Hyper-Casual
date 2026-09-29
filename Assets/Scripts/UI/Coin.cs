@@ -21,11 +21,13 @@ public class Coin : MonoBehaviour
         UpdateCoinDisplay();
     }
 
+    // Lắng nghe sự kiện thay đổi coin để cập nhật text hiển thị
     void HandleChangeCoin(int coins)
     {
         coinText.text = coins.ToString();
     }
 
+    // Đồng bộ và hiển thị số coin hiện tại từ DataManager
     public void UpdateCoinDisplay()
     {
         coinText.text = DataManager.Instance.Coins.ToString();

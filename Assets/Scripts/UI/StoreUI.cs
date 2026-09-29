@@ -29,6 +29,7 @@ public class StoreUI : Menu
         StoreManager.onOpenSkin -= HandleOpenSkin;
     }
 
+    // Hook khi menu mở: cập nhật trạng thái nút mở khóa
     protected override void OnOpen()
     {
         base.OnOpen();
@@ -41,6 +42,7 @@ public class StoreUI : Menu
         UpdateButtonOpen();
     }
 
+    // Khởi tạo danh sách các button skin trong shop từ danh sách SkinItems
     void Generate()
     {
         foreach (var skinItem in StoreManager.Instance.SkinItems)
@@ -50,6 +52,7 @@ public class StoreUI : Menu
         }
     }
 
+    // Cập nhật trạng thái tương tác và text hiển thị giá của nút mở khóa ngẫu nhiên
     public void UpdateButtonOpen(int coin = 0)
     {
         buttonOpen.interactable = StoreManager.Instance.CanUnlockRandom();
@@ -63,6 +66,7 @@ public class StoreUI : Menu
         }
     }
 
+    // Lắng nghe sự kiện mở khóa skin để cập nhật lại nút mở khóa
     private void HandleOpenSkin(SkinItemSO skinItemSO)
     {
         UpdateButtonOpen();

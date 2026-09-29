@@ -48,6 +48,7 @@ public class EnemyGroup : MonoBehaviour
         StartCombat -= onStartCombat;
     }
 
+    // Ẩn UI hiển thị số lượng enemy khi bắt đầu giao chiến
     void onStartCombat()
     {
         countText.transform.parent.gameObject.SetActive(false);
@@ -90,6 +91,7 @@ public class EnemyGroup : MonoBehaviour
     }
 
     //
+    // Tính toán tọa độ cục bộ của enemy theo mô hình Fermat spiral
     private Vector3 EnemyLocalPositions(int index)
     {
         float r = radius * Mathf.Sqrt(index);
@@ -100,6 +102,7 @@ public class EnemyGroup : MonoBehaviour
         return new Vector3(x, 0, z);
     }
 
+    // Khởi tạo các enemy và đặt vào vị trí tương ứng
     private void Generate()
     {
         for (int i = 0; i < amount; i++)
@@ -110,6 +113,7 @@ public class EnemyGroup : MonoBehaviour
         }
     }
 
+    // Gán mục tiêu runner cho từng enemy và điều khiển đuổi theo
     private void SetTargetRunner()
     {
         listEnemies.RemoveAll(enemy => enemy == null);
@@ -140,6 +144,7 @@ public class EnemyGroup : MonoBehaviour
         }
     }
 
+    // Quét phát hiện người chơi trong bán kính để bắt đầu kích hoạt giao chiến
     private void ScanPlayer()
     {
         int num = Physics.OverlapSphereNonAlloc(
