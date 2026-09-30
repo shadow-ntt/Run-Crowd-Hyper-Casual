@@ -12,7 +12,7 @@ public class Road : Singleton<Road>
     private string LEVELGAME = "levelGame";
     private int levelGame = 1;
     public float EndLineZ { get; private set; }
-    public static Action<int> onUpLevel;
+    public static event Action<int> onUpLevel;
     public int CurrentLevel => levelGame;
 
     void OnEnable() => GameManager.OnChangeGameState += ChangeGameStateCallBack;

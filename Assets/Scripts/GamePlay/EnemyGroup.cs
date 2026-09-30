@@ -29,8 +29,8 @@ public class EnemyGroup : MonoBehaviour
     private Collider[] colliders = new Collider[10];
     private List<Enemy> listEnemies = new List<Enemy>();
 
-    public static Action StartCombat;
-    public static Action EndCombat;
+    public static event Action StartCombat;
+    public static event Action EndCombat;
 
     private bool isCombat = false;
     private bool combatEnded = false;

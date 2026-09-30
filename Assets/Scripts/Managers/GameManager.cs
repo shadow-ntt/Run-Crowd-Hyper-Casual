@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         GameOver,
     }
 
-    public static Action<GameState> OnChangeGameState;
+    public static event Action<GameState> OnChangeGameState;
 
     public static GameManager Instance { get; private set; }
 

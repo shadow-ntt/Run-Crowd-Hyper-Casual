@@ -26,9 +26,9 @@ public class DataManager : Singleton<DataManager>
     public int AmoutStartRunner { get; private set; }
 
     //
-    public static Action<int> onChangeCoin;
-    public static Action<int> onUpLevelIncome;
-    public static Action<int> onUpLevelRunner;
+    public static event Action<int> onChangeCoin;
+    public static event Action<int> onUpLevelIncome;
+    public static event Action<int> onUpLevelRunner;
 
     protected override void Awake()
     {

@@ -5,7 +5,7 @@ public class PlayerCollision : MonoBehaviour
 {
     private Player player;
     private Collider[] hitColliders = new Collider[10];
-    public static Action onDoorHit;
+    public static event Action onDoorHit;
 
     void Awake()
     {

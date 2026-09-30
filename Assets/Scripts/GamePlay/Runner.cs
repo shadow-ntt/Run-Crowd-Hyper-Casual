@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Runner : MonoBehaviour
 {
-    public static Action onRunnerDead;
+    public static event Action onRunnerDead;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() { }

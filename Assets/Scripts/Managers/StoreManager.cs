@@ -22,8 +22,8 @@ public class StoreManager : Singleton<StoreManager>
     public int PriceOpenRandomSkin => priceOpenRandomSkin;
 
     //
-    public static Action<SkinItemSO> onSelectedSkin;
-    public static Action<SkinItemSO> onOpenSkin;
+    public static event Action<SkinItemSO> onSelectedSkin;
+    public static event Action<SkinItemSO> onOpenSkin;
 
     protected override void Awake()
     {
