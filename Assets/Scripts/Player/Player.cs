@@ -248,6 +248,8 @@ public class Player : Singleton<Player>
     public int CaculateReward()
     {
         return (int)
-            Math.Floor(Math.Sqrt(RunnerCount()) * (0.1f * DataManager.Instance.LevelIncome + 1f));
+                Math.Floor(
+                    Math.Sqrt(RunnerCount()) * (0.1f * DataManager.Instance.LevelIncome + 1f)
+                ) * 100;
     }
 }
